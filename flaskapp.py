@@ -17,7 +17,7 @@ def subjects_page():
 def about_project():
     return render_template('project.html',project_active=True)
 
-
+#
 
 @app.route('/admins')
 def get_admins():
