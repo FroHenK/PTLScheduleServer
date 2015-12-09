@@ -40,9 +40,10 @@ def create_day_element(usr_date):
     return redirect('/get_day/' + usr_date + "/")
 
 
-@app.before_first_request
+@app.before_request
 def b_request():
-    session['grade_selected_id'] = 105  # FIXME  bad code
+    if session.get('grade_selected_id') is  None:
+        session['grade_selected_id'] = 105  # FIXME  bad code
 
 
 @app.route("/get_day/<string:usr_date>/", methods=['GET'])
