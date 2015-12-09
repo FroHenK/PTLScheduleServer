@@ -1,33 +1,33 @@
 {% extends "index.html" %}
 {% block body %}
 
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading">Домашние работы</div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Домашние работы</div>
 
 
-  <!-- List group -->
-  <ul class="list-group">
-      {% for homework in homeworks_array %}
-    <li class="list-group-item">{{ homework.data }}</li>
-      {% else %}
- <li class="list-group-item">Нет данных</li>
-    {% endfor %}
-{% if session.is_admin %}
-<li class="list-group-item">
-<form action="/add_homework/{{ session.grade_selected_id}}/{{subject_id  }}/" method="post">
+        <!-- List group -->
+        <ul class="list-group">
+            {% for homework in homeworks_array %}
+                <li class="list-group-item">{{ homework.data }} {% if session.is_admin %}<a class="btn-link" href="/delete_homework/{{ homework.id }}">Удалить</a>{% endif %}</li>
+            {% else %}
+                <li class="list-group-item">Нет данных</li>
+            {% endfor %}
+            {% if session.is_admin %}
+                <li class="list-group-item">
+                    <form action="/add_homework/{{ session.grade_selected_id }}/{{ subject_id }}/" method="post">
 
-  <input type="text" class="form-control" name="data">
+                        <input type="text" class="form-control" name="data">
 
-    <br><br>
-  <button type="submit" class="btn">Принять</button>
+                        <br><br>
+                        <button type="submit" class="btn">Принять</button>
 
 
-</form>
+                    </form>
 
-</li>
-{% endif %}
-  </ul>
-</div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 
 {% endblock %}

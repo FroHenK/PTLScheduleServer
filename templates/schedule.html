@@ -1,4 +1,72 @@
 {% extends "index.html" %}
 {% block body %}
-<h1>Этот раздел в разработке</h1>
+    <h2>Домашняя работа для: {{ (current_datetime).strftime("%Y.%m.%d") }}</h2>
+    <nav>
+        <ul class="pagination">
+            <li>
+                <a href="/get_day/{{ (current_datetime-timedelta(days=1)).strftime("%Y-%m-%d") }}/"
+                   aria-label="Previous">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <li><a href="#">{{ (current_datetime).strftime("%Y.%m.%d") }}</a></li>
+            <li>
+                <a href="/get_day/{{ (current_datetime+timedelta(days=1)).strftime("%Y-%m-%d") }}/" aria-label="Next">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Предмет</th>
+            <th>Время</th>
+            {% if session.is_admin %}
+                <th>Удаление</th>{% endif %}
+        </tr>
+
+        </thead>
+        <tbody>
+         {% for day_element in day_elements_array %}
+            <tr>
+
+                    <td><a href="/subjects/{{ day_element.subject_id }}" >{{ day_element.subject_name }}</a></td>
+                    <td>{{ day_element.date.strftime("%H:%M") }}
+                    </td>
+<td>
+    {% if session.is_admin %}
+                <a class="btn-link" href="/delete_day_element/{{ day_element.id }}">Удалить</a>
+                  {% endif %}
+            </td>
+
+            </tr>
+            {% endfor %}
+        {% if session.is_admin %}
+
+            <tr>
+                <form action="/create_day_element/{{ (current_datetime).strftime("%Y-%m-%d") }}/" method="post">
+                    <td><select class="form-control" name="subject_id">
+                        {% for subject in subjects_array %}
+                            <option value="{{ subject.id }}">{{ subject.title }}</option>
+                        {% endfor %}</td>
+                    </select>
+                    <td><input type="time" name="usr_time"><br>
+                        <button type="submit" class="btn btn-default">Добавить предмет</button>
+                    </td>
+
+                </form>
+
+            </tr>
+
+        {% endif %}
+        </tbody>
+    </table>
+
+
+
+
 {% endblock %}

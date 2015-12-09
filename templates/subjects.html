@@ -1,8 +1,8 @@
 {% extends "index.html" %}
 {% block body %}
-{% for subject in subjects_array %}
-<a href="/subjects/{{ subject.id }}/">{{ subject.title }}</a><br>
+    {% for subject in subjects_array %}
+        <a href="/subjects/{{ subject.id }}/">{{ subject.title }}</a><br>
     {% else %}
-<em>Что-то пошло не так...</em>
+        <em>Что-то пошло не так...</em>
     {% endfor %}
 {% endblock %}

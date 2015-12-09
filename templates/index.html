@@ -34,23 +34,25 @@
                     <li>{% endif %} <a href="/project/">Про проект</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-            {% if session.is_admin %}<li><a>Вы в системе</a></li>{% endif %}
+                {% if session.is_admin %}
+                    <li><a>Вы в системе</a></li>{% endif %}
 
 
-<li>
+                <li>
                     <form action="/set_grade/" method="post" role="form">
                         <div class="form-group">
 
-                            <select class="form-control"  onchange="this.form.submit()" name="grade_id">
+                            <select class="form-control" onchange="this.form.submit()" name="grade_id">
                                 {% for grade in grades_array %}
-                                    <option {% if session.grade_selected_id  == grade.id %} selected="selected" {% endif %}
-                                                                    value="{{ grade.id }}">{{ grade.title }}</option>
+                                    <option {% if session.grade_selected_id  == grade.id %}
+                                        selected="selected" {% endif %}
+                                        value="{{ grade.id }}">{{ grade.title }}</option>
                                 {% endfor %}
                             </select>
 
                         </div>
                     </form>
-</li>
+                </li>
             </ul>
         </div>
         </form>
