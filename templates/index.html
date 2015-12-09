@@ -21,19 +21,47 @@
 
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
-      <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            {% if schedule_active %}<li class="active">{% else %}<li> {% endif %}<a href="/">Расписание</a></li>
-            {% if subjects_active %}<li class="active">{% else %}<li>{% endif %} <a href="/subjects/">Предметы</a></li>
-            {% if project_active %}<li class="active">{% else %}<li>{% endif %} <a href="/project/">Про проект</a></li>
-              </ul>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                {% if schedule_active %}
+                    <li class="active">{% else %}
+                    <li> {% endif %}<a href="/">Расписание</a></li>
+                {% if subjects_active %}
+                    <li class="active">{% else %}
+                    <li>{% endif %} <a href="/subjects/">Предметы</a></li>
+                {% if project_active %}
+                    <li class="active">{% else %}
+                    <li>{% endif %} <a href="/project/">Про проект</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            {% if session.is_admin %}<li><a>Вы в системе</a></li>{% endif %}
+
+
+<li>
+                    <form action="/set_grade/" method="post" role="form">
+                        <div class="form-group">
+
+                            <select class="form-control"  onchange="this.form.submit()" name="grade_id">
+                                {% for grade in grades_array %}
+                                    <option {% if session.grade_selected_id  == grade.id %} selected="selected" {% endif %}
+                                                                    value="{{ grade.id }}">{{ grade.title }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </form>
+</li>
+            </ul>
+        </div>
+        </form>
+        </ul>
     </div>
 
-        </div>
+    </div>
 </nav>
 <div class="container">
 
-{% block body %}{% endblock %}
+    {% block body %}{% endblock %}
 </div>
 </body>
 </html>
