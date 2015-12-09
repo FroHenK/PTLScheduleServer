@@ -125,7 +125,9 @@ def serve_static_resource(resource):
 
 
 def encode_b(obj):
-
+    if isinstance(obj, datetime):
+            serial = obj.isoformat()
+            return serial
     return obj.__dict__
 
 
