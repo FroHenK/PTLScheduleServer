@@ -47,7 +47,7 @@ cnx = connection.MySQLConnection(user=MYSQL_USER, password=MYSQL_PASSWORD,
 curs = cnx.cursor(buffered=True)
 
 
-def get_grades():  # Get grades from DB
+def get_all_grades():  # Get grades from DB
     curs.execute('SELECT * FROM grade')
     res = curs.fetchall()
 
@@ -187,7 +187,7 @@ def get_day_db_id(id):  # delete day element by id
     return elements_array[0]
 
 
-def get_subjects():  # get all subjects
+def get_all_subjects():  # get all subjects
     curs.execute('SELECT * FROM subject')
     res = curs.fetchall()
     subjects_array = []

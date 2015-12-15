@@ -5,7 +5,7 @@ import hashlib
 import json
 from datetime import datetime, timedelta
 
-from mysqlclient import curs, cnx, get_grades, get_subjects, get_homeworks, is_valid_admin, add_homework_db, \
+from mysqlclient import curs, cnx, get_all_grades, get_all_subjects, get_homeworks, is_valid_admin, add_homework_db, \
     create_day_element_db, get_day_db, get_day_db_id, get_homework_id, delete_day_db_id, delete_homework_id, \
     get_all_day_db, get_all_homeworks, add_subject_db, delete_subject_id
 
@@ -21,8 +21,8 @@ app.config.from_pyfile('flaskapp.cfg')
 def template_imports():  # put things into table for template rendering
     res = {}
 
-    res["grades_array"] = get_grades()
-    res["subjects_array"] = get_subjects()
+    res["grades_array"] = get_all_grades()
+    res["subjects_array"] = get_all_subjects()
     res["timedelta"] = timedelta
     return res
 
@@ -62,6 +62,7 @@ def create_day_element(usr_date):
 
 @app.before_request
 def b_request():
+    # lazy initializations
     if session.get('grade_selected_id') is None:  # if none grade is selected
         session['grade_selected_id'] = 105  # FIXME bad code
     if session.get('is_admin') is None:
@@ -138,7 +139,7 @@ def add_subject():
     return redirect('/subjects/')
 
 
-# not enough permissions
+# displays not enough permissions error page
 def not_enough_permissions():
     return render_template('not_enough_permissions.html')
 
@@ -186,11 +187,11 @@ def encode_b(obj):  # JSON encode function
     return obj.__dict__
 
 
-@app.route("/get_json/")  # API for Java written in JSON
+@app.route("/get_json/")  # API for Java JSON
 def json_api():
     json_data = {}
-    json_data['grades'] = get_grades()
-    json_data['subjects'] = get_subjects()
+    json_data['grades'] = get_all_grades()
+    json_data['subjects'] = get_all_subjects()
     json_data['homeworks'] = get_all_homeworks()
     json_data['day_elements'] = get_all_day_db()
 
@@ -198,5 +199,4 @@ def json_api():
 
 
 if __name__ == '__main__':
-    # add_subject_db('TestSubject')
     app.run()
