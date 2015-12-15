@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>PTL Schedule</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static',filename= 'css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -25,13 +25,13 @@
             <ul class="nav navbar-nav">
                 {% if schedule_active %}
                     <li class="active">{% else %}
-                    <li> {% endif %}<a href="/">Расписание</a></li>
+                    <li> {% endif %}<a href="{{ url_for('index') }}">Расписание</a></li>
                 {% if subjects_active %}
                     <li class="active">{% else %}
-                    <li>{% endif %} <a href="/subjects/">Предметы</a></li>
+                    <li>{% endif %} <a href="{{ url_for('subjects_page') }}">Предметы</a></li>
                 {% if project_active %}
                     <li class="active">{% else %}
-                    <li>{% endif %} <a href="/project/">Про проект</a></li>
+                    <li>{% endif %} <a href="{{ url_for('about_project') }}">Про проект</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if session.is_admin %}
@@ -49,7 +49,6 @@
                                         value="{{ grade.id }}">{{ grade.title }}</option>
                                 {% endfor %}
                             </select>
-
                         </div>
                     </form>
                 </li>
@@ -62,8 +61,11 @@
     </div>
 </nav>
 <div class="container">
-
-    {% block body %}{% endblock %}
+    <div class="row">
+        <div class="col-xs-12">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
 </div>
 </body>
 </html>

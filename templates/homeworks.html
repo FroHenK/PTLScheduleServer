@@ -9,7 +9,11 @@
         <!-- List group -->
         <ul class="list-group">
             {% for homework in homeworks_array %}
-                <li class="list-group-item">{{ homework.data }} {% if session.is_admin %}<a class="btn-link" href="/delete_homework/{{ homework.id }}">Удалить</a>{% endif %}</li>
+                <li class="list-group-item">
+                    <div style="width: 450px">{{ homework.data }}{% if session.is_admin %}<br>
+                        <a class="btn btn-xs btn-default" href="/delete_homework/{{ homework.id }}"><span
+                                class="glyphicon glyphicon-remove-sign"/>&nbspУдалить</a>{% endif %}</div>
+                </li>
             {% else %}
                 <li class="list-group-item">Нет данных</li>
             {% endfor %}
@@ -30,4 +34,7 @@
         </ul>
     </div>
 
+    {% if session.is_admin %}
+        <a class="btn btn btn-default" href="{{ url_for('remove_subject',subject_id=subject_id) }}"><span
+                class="glyphicon glyphicon-remove-circle"/>&nbspУдалить предмет</a>{% endif %}
 {% endblock %}

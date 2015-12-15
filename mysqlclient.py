@@ -1,3 +1,4 @@
+__author__ = 'Alexey Maksimov (FroHenK)'
 import os
 import mysql
 from datetime import datetime
@@ -11,7 +12,7 @@ class Grade:
 
 
 class DayElement:
-    def __init__(self,id, grade_id, date, subject_id,subject_name):
+    def __init__(self, id, grade_id, date, subject_id, subject_name):
         self.subject_name = subject_name
         self.subject_id = subject_id
         self.date = date
@@ -46,7 +47,7 @@ cnx = connection.MySQLConnection(user=MYSQL_USER, password=MYSQL_PASSWORD,
 curs = cnx.cursor(buffered=True)
 
 
-def get_grades():
+def get_grades():  # Get grades from DB
     curs.execute('SELECT * FROM grade')
     res = curs.fetchall()
 
@@ -56,8 +57,7 @@ def get_grades():
     return grades_array
 
 
-
-def get_homeworks(grade_id2, subject_id2):
+def get_homeworks(grade_id2, subject_id2):  # get homeworks by grade and subject
     id_ = 'SELECT * FROM homework WHERE grade_id=%s AND subject_id=%s ORDER BY id DESC' % (grade_id2, subject_id2)
 
     curs.execute(id_)
@@ -69,7 +69,8 @@ def get_homeworks(grade_id2, subject_id2):
         homeworks_array.append(Homework(int(id), grade_id, subject_id, str(data.decode("utf8"))))
     return homeworks_array
 
-def get_all_homeworks():
+
+def get_all_homeworks():  # get all homeworks
     id_ = 'SELECT * FROM homework'
 
     curs.execute(id_)
@@ -81,14 +82,15 @@ def get_all_homeworks():
         homeworks_array.append(Homework(int(id), grade_id, subject_id, str(data.decode("utf8"))))
     return homeworks_array
 
-def create_day_element_db(grade_id, datetime, subject_id):
+
+def create_day_element_db(grade_id, datetime, subject_id):  # create day element
     insert_command = 'INSERT INTO day_element (grade_id, date, subject_id)  VALUES (%s,\'%s\',%s)' % (
         grade_id, datetime.strftime('%Y-%m-%d %H:%M:00'), subject_id)
     curs.execute(insert_command)
     cnx.commit()
 
 
-def is_valid_admin(username, password_md5):
+def is_valid_admin(username, password_md5):  # is there admin with those login/pass
     id_ = 'SELECT * FROM admins WHERE username=\'%s\' AND password=\'%s\'' % (username, password_md5)
     print(id_)
     curs.execute(id_)
@@ -97,37 +99,47 @@ def is_valid_admin(username, password_md5):
     return True
 
 
-def add_homework_db(grade_id, subject_id, data):
+def add_homework_db(grade_id, subject_id, data):  # create and add homework to DB
     insert_command = 'INSERT INTO homework (grade_id, subject_id, data) VALUES (%s,%s,\'%s\')' % (
         grade_id, subject_id, data)
     curs.execute(insert_command)
     cnx.commit()
 
-def get_day_db(grade_id,date):
-    elements_array=[]
-    command='SELECT * FROM day_element WHERE grade_id = %s AND date BETWEEN \'%s 00:00:00\' AND \'%s 23:59:59\' ORDER BY date'%(grade_id,date.strftime('%Y-%m-%d'),date.strftime('%Y-%m-%d'))
+
+def add_subject_db(title):  # create and add homework to DB
+    insert_command = 'INSERT INTO subject (title) VALUES (\'%s\')' % (title)
+    curs.execute(insert_command)
+    cnx.commit()
+
+
+def get_day_db(grade_id, date):  # get day elements by grade and date
+    elements_array = []
+    command = 'SELECT * FROM day_element WHERE grade_id = %s AND date BETWEEN \'%s 00:00:00\' AND \'%s 23:59:59\' ORDER BY date' % (
+        grade_id, date.strftime('%Y-%m-%d'), date.strftime('%Y-%m-%d'))
     curs.execute(command)
     res = curs.fetchall()
     for (id, grade_id, date, subject_id) in res:
-            curs.execute('SELECT title FROM subject WHERE id=%s'%subject_id)
-            title=curs.fetchone()[0]
-            elements_array.append( DayElement(id,grade_id,date,subject_id,str(title.decode('utf8'))) )
+        curs.execute('SELECT title FROM subject WHERE id=%s' % subject_id)
+        title = curs.fetchone()[0]
+        elements_array.append(DayElement(id, grade_id, date, subject_id, str(title.decode('utf8'))))
 
     return elements_array
 
-def get_all_day_db():
-    elements_array=[]
-    command='SELECT * FROM day_element'
+
+def get_all_day_db():  # get all day elements
+    elements_array = []
+    command = 'SELECT * FROM day_element'
     curs.execute(command)
     res = curs.fetchall()
     for (id, grade_id, date, subject_id) in res:
-            curs.execute('SELECT title FROM subject WHERE id=%s'%subject_id)
-            title=curs.fetchone()[0]
-            elements_array.append( DayElement(id,grade_id,date,subject_id,str(title.decode('utf8'))) )
+        curs.execute('SELECT title FROM subject WHERE id=%s' % subject_id)
+        title = curs.fetchone()[0]
+        elements_array.append(DayElement(id, grade_id, date, subject_id, str(title.decode('utf8'))))
 
     return elements_array
 
-def get_homework_id(id):
+
+def get_homework_id(id):  # get homework by id
     id_ = 'SELECT * FROM homework WHERE id=%s' % (id)
 
     curs.execute(id_)
@@ -139,43 +151,51 @@ def get_homework_id(id):
         homeworks_array.append(Homework(int(id), grade_id, subject_id, str(data.decode("utf8"))))
     return homeworks_array[0]
 
-def delete_day_db_id(id):
 
-    command='DELETE  FROM day_element WHERE id=%s'%id
+def delete_day_db_id(id):  # delete day element by id
 
-    curs.execute(command)
-    cnx.commit()
-
-def delete_homework_id(id):
-
-    command='DELETE  FROM homework WHERE id=%s'%id
+    command = 'DELETE  FROM day_element WHERE id=%s' % id
 
     curs.execute(command)
     cnx.commit()
 
-def get_day_db_id(id):
-    elements_array=[]
-    command='SELECT * FROM day_element WHERE id=%s'%id
+
+def delete_subject_id(id):  # delete subject by id
+
+    command = 'DELETE  FROM subject WHERE id=%s' % id
+    curs.execute(command)
+    cnx.commit()
+
+
+def delete_homework_id(id):  # delete hw by id
+
+    command = 'DELETE  FROM homework WHERE id=%s' % id
+
+    curs.execute(command)
+    cnx.commit()
+
+
+def get_day_db_id(id):  # delete day element by id
+    elements_array = []
+    command = 'SELECT * FROM day_element WHERE id=%s' % id
     curs.execute(command)
     res = curs.fetchall()
     for (id, grade_id, date, subject_id) in res:
-            curs.execute('SELECT title FROM subject WHERE id=%s'%subject_id)
-            title=curs.fetchone()[0]
-            elements_array.append( DayElement(id,grade_id,date,subject_id,str(title.decode('utf8'))) )
+        curs.execute('SELECT title FROM subject WHERE id=%s' % subject_id)
+        title = curs.fetchone()[0]
+        elements_array.append(DayElement(id, grade_id, date, subject_id, str(title.decode('utf8'))))
 
     return elements_array[0]
 
 
-def get_subjects():
+def get_subjects():  # get all subjects
     curs.execute('SELECT * FROM subject')
     res = curs.fetchall()
-
     subjects_array = []
     for (id, title) in res:
         subjects_array.append(Subject(int(id), str(title.decode("utf8"))))
     return subjects_array
 
 
-
-def close_connection():
+def close_connection():  # not used
     cnx.close()

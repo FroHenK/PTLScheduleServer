@@ -5,4 +5,20 @@
     {% else %}
         <em>Что-то пошло не так...</em>
     {% endfor %}
+
+    {% if session.is_admin %}
+        <br>
+        <form action="{{ url_for('add_subject') }}" method="post">
+
+            <input type="text" class="form-control" name="title">
+
+            <br>
+            <button type="submit" class="btn">Добавить</button>
+
+
+        </form>
+
+    {% endif %}
+
+
 {% endblock %}
