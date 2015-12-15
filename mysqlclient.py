@@ -92,7 +92,6 @@ def create_day_element_db(grade_id, datetime, subject_id):  # create day element
 
 def is_valid_admin(username, password_md5):  # is there admin with those login/pass
     id_ = 'SELECT * FROM admins WHERE username=\'%s\' AND password=\'%s\'' % (username, password_md5)
-    print(id_)
     curs.execute(id_)
     if not curs.fetchone():
         return False
