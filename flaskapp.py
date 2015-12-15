@@ -1,3 +1,4 @@
+GUEST_LOCAL = 'Гость'
 __author__ = 'Alexey Maksimov (FroHenK)'
 import os
 import hashlib
@@ -32,6 +33,15 @@ def set_grade():
     return redirect('/')
 
 
+@app.route('/logout/')
+def logout():
+    if not session['is_admin']:
+        return not_enough_permissions()
+    session['is_admin'] = False
+    session['username'] = GUEST_LOCAL
+    return redirect(url_for('index'))
+
+
 @app.route('/admin/')
 def admin_panel():
     return render_template('admin_panel.html', admin_panel_active=True)
@@ -57,7 +67,7 @@ def b_request():
     if session.get('is_admin') is None:
         session['is_admin'] = False
     if session.get('username') is None:
-        session['username'] = 'Гость'
+        session['username'] = GUEST_LOCAL
 
 
 @app.route("/get_day/<string:usr_date>/", methods=['GET'])
@@ -151,18 +161,6 @@ def draw_subject(subject_id):
 @app.route('/project/')
 def about_project():
     return render_template('project.html', project_active=True)
-
-
-'''
-@app.route('/admins')
-def get_admins():
-    res = ""
-    curs.execute("SELECT * FROM admins")
-
-    for (id, username, password) in curs:
-        res += "%s\n" % username.decode("utf8")
-    return res
-'''
 
 
 @app.route('/<path:resource>')

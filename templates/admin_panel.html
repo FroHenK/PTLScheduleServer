@@ -1,7 +1,9 @@
 {% extends "index.html" %}
 {% block body %}
     {% if session.is_admin %}
-   <h3>Здравствуйте, {{ session.username }}</h3>
+        <h3>Здравствуйте, {{ session.username }}</h3>
+        <br>
+        <a class="btn-default btn-xs" href="{{ url_for('logout') }}">Выйти из аккаунта</a>
     {% else %}
         <form action="/login/" method="post">
             Имя пользователя:<br>
