@@ -32,6 +32,11 @@ def set_grade():
     return redirect('/')
 
 
+@app.route('/admin/')
+def admin_panel():
+    return render_template('admin_panel.html', admin_panel_active=True)
+
+
 @app.route("/create_day_element/<string:usr_date>/", methods=['POST'])
 def create_day_element(usr_date):
     if not session['is_admin']:
@@ -51,6 +56,8 @@ def b_request():
         session['grade_selected_id'] = 105  # FIXME bad code
     if session.get('is_admin') is None:
         session['is_admin'] = False
+    if session.get('username') is None:
+        session['username'] = 'Гость'
 
 
 @app.route("/get_day/<string:usr_date>/", methods=['GET'])
@@ -83,8 +90,10 @@ def delete_homework(id):
 @app.route('/login/', methods=['POST'])
 def admin_login():
     s = str(hashlib.md5(str(request.form['password']).encode('utf8')).hexdigest())
-    if is_valid_admin(str(request.form['username']), s):
-        session['is_admin'] = True
+    if not is_valid_admin(str(request.form['username']), s):
+        return not_enough_permissions()  # TODO make special login error page
+    session['is_admin'] = True
+    session['username'] = str(request.form['username'])
     return redirect('/')
 
 

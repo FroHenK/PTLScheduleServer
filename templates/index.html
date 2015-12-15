@@ -34,9 +34,13 @@
                     <li>{% endif %} <a href="{{ url_for('about_project') }}">Про проект</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+
                 {% if session.is_admin %}
                     <li><a>Вы в системе</a></li>{% endif %}
 
+                {% if admin_panel_active %}
+                    <li class="active">{% else %}
+                    <li>{% endif %} <a href="{{ url_for('admin_panel') }}">Управление</a></li>
 
                 <li>
                     <form action="/set_grade/" method="post" role="form">
