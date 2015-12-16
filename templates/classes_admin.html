@@ -2,9 +2,24 @@
 {% block body %}
 
     {% if session.is_admin %}
-        <h3>Здравствуйте, {{ session.username }}</h3>
+        {% for subject in grades_array %}
+            <span>{{ subject.title }}</span><br>
+        {% else %}
+            <em>Что-то пошло не так...</em>
+        {% endfor %}
+
         <br>
-        <a class="btn-default btn-xs" href="{{ url_for('logout') }}">Выйти из аккаунта</a>
+        <form action="{{ url_for('add_grade') }}" method="post">
+
+            <input type="text" class="form-control" name="title">
+
+            <br>
+            <button type="submit" class="btn">Добавить</button>
+
+
+        </form>
+
+
     {% else %}
         <form action="/login/" method="post">
             Имя пользователя:<br>

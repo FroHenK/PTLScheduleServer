@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 from mysqlclient import curs, cnx, get_all_grades, get_all_subjects, get_homeworks, is_valid_admin, add_homework_db, \
     create_day_element_db, get_day_db, get_day_db_id, get_homework_id, delete_day_db_id, delete_homework_id, \
-    get_all_day_db, get_all_homeworks, add_subject_db, delete_subject_id
+    get_all_day_db, get_all_homeworks, add_subject_db, delete_subject_id, add_grade_db
 
 from flask import Flask, request, session, flash, url_for, redirect, \
     render_template, abort, send_from_directory
@@ -16,6 +16,8 @@ app = Flask(__name__)
 
 app.config.from_pyfile('flaskapp.cfg')
 
+
+# TODO refactor 'class' to 'grade'
 
 @app.context_processor
 def template_imports():  # put things into table for template rendering
@@ -40,6 +42,17 @@ def logout():
     session['is_admin'] = False
     session['username'] = GUEST_LOCAL
     return redirect(url_for('index'))
+
+
+@app.route('/classes/')
+def classes_admin():
+    return render_template('classes_admin.html', classes_admin_active=True)
+
+
+@app.route('/add_grade/', methods=['POST'])
+def add_grade():
+    add_grade_db(request.form['title'])
+    return redirect(url_for('classes_admin'))
 
 
 @app.route('/admin/')

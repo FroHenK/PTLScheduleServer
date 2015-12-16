@@ -105,6 +105,13 @@ def add_homework_db(grade_id, subject_id, data):  # create and add homework to D
     cnx.commit()
 
 
+def add_grade_db(title):  # create and add homework to DB
+    insert_command = 'INSERT INTO grade (title) VALUES (\'%s\')' % title
+    curs.execute(insert_command)
+    cnx.commit()
+
+
+
 def add_subject_db(title):  # create and add homework to DB
     insert_command = 'INSERT INTO subject (title) VALUES (\'%s\')' % (title)
     curs.execute(insert_command)

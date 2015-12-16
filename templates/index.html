@@ -37,7 +37,11 @@
 
                 {% if session.is_admin %}
                     <li><a>Вы в системе</a></li>{% endif %}
-
+                {% if admin_panel_active and session.is_admin or classes_admin_active %}
+                    {% if classes_admin_active %}
+                        <li class="active">{% else %}
+                        <li>{% endif %} <a href="{{ url_for('classes_admin') }}">Классы</a></li>
+                {% endif %}
                 {% if admin_panel_active %}
                     <li class="active">{% else %}
                     <li>{% endif %} <a href="{{ url_for('admin_panel') }}">Управление</a></li>
